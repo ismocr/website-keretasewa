@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2010,7 +2011,42 @@ Thank you for choosing ISMO Car Rental! We will contact you shortly to confirm y
       updateProgress(1);
       
       setDefaultPickupTime();
-      alert('Thank you for your booking request! We have opened WhatsApp for you to send your details. Our team will contact you shortly.');
+  const supabaseUrl = 'https://mjtglqdymdnmmnmyvhbe.supabase.co';
+const supabaseKey = 'sb_publishable_GNBdVIywAyT8_FWviCvINQ_vfMDLNms';
+const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    let modelKereta = document.getElementById('carType').value;
+    let tarikhSewa = document.getElementById('pickupDate').value;
+    let lokasiDelivery = document.getElementById('pickupArea').value;
+    let lokasiReturn = document.getElementById('returnArea').value;
+    let noIc = document.getElementById('idNumber').value;
+    let hargaSpan = document.getElementById('baseRentalFee').innerText;
+    let hargaJualan = Number(hargaSpan.replace(/[^0-9.-]+/g, ""));
+
+    const nomborBooking = 'ISMO-' + Math.floor(Math.random() * 100000);
+
+    supabaseClient.from('tempahan').insert([
+      {
+        no_booking: nomborBooking,
+        nama_pelanggan: name,
+        no_tel_pelanggan: phone,
+        model_kereta: modelKereta,
+        tarikh_sewa: tarikhSewa,
+        status_tempahan: 'Baru',
+        lokasi_delivery: lokasiDelivery,
+        lokasi_return: lokasiReturn,
+        no_ic_pelanggan: noIc,
+        harga_jualan_total: hargaJualan
+      }
+    ]).then(function(response) {
+      if (response.error) {
+        console.error("Ralat Supabase:", response.error.message);
+      } else {
+        console.log("Data berjaya masuk ke Supabase!");
+      }
+    });
+
+    alert('Thank you for your booking request! We have opened WhatsApp for you to send your payment receipt.');
     });
 
     // ========== SCROLL TO TOP FUNCTIONALITY ==========
@@ -2084,11 +2120,5 @@ Thank you for choosing ISMO Car Rental! We will contact you shortly to confirm y
     });
   </script>
 
-  <script>
-    // Sambungan ke Supabase
-    const supabaseUrl = 'https://mjtglqdymdnmmnmyvhbe.supabase.co';
-    const supabaseKey = 'sb_publishable_GNBdVIywAyT8_FWviCvINQ_vfMDLNms';
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-  </script>
 </body>
 </html>
